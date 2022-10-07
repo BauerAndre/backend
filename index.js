@@ -10,4 +10,8 @@ const socketHandler = socketIO(server);
 
 socketHandler.on("connection", () => {
   console.log("Client Connected!");
+
+  setInterval(() => {
+    socketHandler.emit("crypto", "Hello Cryptos Client!");
+  }, 1000);
 });
