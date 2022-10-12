@@ -4,7 +4,9 @@ const express = require("express");
 const socketIO = require("socket.io");
 const axios = require("axios");
 
-const server = express().listen(PORT, () => {
+const app = express();
+
+const server = app.listen(PORT, () => {
   console.log(`Listening to ${PORT}`);
 });
 
@@ -48,4 +50,14 @@ const getPrices = () => {
 
 setInterval(() => {
   getPrices();
-}, 20000);
+}, 60000);
+
+app.get("/cryptos/profile", (req, res) => {
+  res.json({ error: true, message: "Missing Crypto Id in the API URL" });
+});
+
+app.get("/cryptos/profile/:id", (req, res) => {
+  const cryptoID = req.params.id;
+
+  res.json({ id: cryptoID });
+});
