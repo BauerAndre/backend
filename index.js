@@ -5,6 +5,7 @@ const socketIO = require("socket.io");
 const axios = require("axios");
 
 const app = express();
+app.use(express.json());
 
 const server = app.listen(PORT, () => {
   console.log(`Listening to ${PORT}`);
@@ -58,6 +59,20 @@ app.get("/cryptos/profile", (req, res) => {
 
 app.get("/cryptos/profile/:id", (req, res) => {
   const cryptoID = req.params.id;
-
-  res.json({ id: cryptoID });
+  axios
+    .get(`${process.env.BASE_URL}/${cryptoID}/profile`, {
+      headers: {
+        "x-messari-api-key": process.env.API_KEY,
+      },
+    })
+    .then((responseData) => {
+      res.json(responseData.data.data);
+    })
+    .catch((err) => {
+      res.json({
+        error: true,
+        message: "Error Fetching Prices Data From API",
+        errorDetails: err,
+      });
+    });
 });
