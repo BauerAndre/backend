@@ -1,4 +1,5 @@
-const PORT = 3000;
+require("dotenv").config();
+const PORT = process.env.PORT;
 const express = require("express");
 const socketIO = require("socket.io");
 const axios = require("axios");
@@ -23,9 +24,7 @@ socketHandler.on("connection", (socket) => {
 });
 
 axios
-  .get(
-    "https://data.messari.io/api/v1/assets?fields=id,slug,symbol,metrics/market_data/price_usd"
-  )
+  .get(process.env.LIST_URL)
   .then((response) => {
     console.log(response);
   })
