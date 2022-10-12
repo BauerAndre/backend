@@ -22,7 +22,11 @@ socketHandler.on("connection", (socket) => {
 
 const getPrices = () => {
   axios
-    .get(process.env.LIST_URL)
+    .get(process.env.LIST_URL, {
+      headers: {
+        "x-messari-api-key": process.env.API_KEY,
+      },
+    })
     .then((response) => {
       const priceList = response.data.data.map((item) => {
         return {
