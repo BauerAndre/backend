@@ -17,24 +17,27 @@ socketHandler.on("connection", (socket) => {
     console.log("client disconnected");
   });
   console.log("Client Connected!");
-
-  setInterval(() => {
-    socketHandler.emit("crypto", "Hello Cryptos Client!");
-  }, 1000);
+  socketHandler.emit("crypto", "Hello Cryptos Client!");
 });
 
-axios
-  .get(process.env.LIST_URL)
-  .then((response) => {
-    const priceList = response.data.data.map((item) => {
-      return {
-        id: item.id,
-        name: item.symbol,
-        price: item.metrics.market_data.price_usd,
-      };
+const getPrices = () => {
+  axios
+    .get(process.env.LIST_URL)
+    .then((response) => {
+      const priceList = response.data.data.map((item) => {
+        return {
+          id: item.id,
+          name: item.symbol,
+          price: item.metrics.market_data.price_usd,
+        };
+      });
+      socketHandler.emit("crypto", priceList);
+    })
+    .catch((error) => {
+      console.log(error);
     });
-    console.log(priceList);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+};
+
+setInterval(() => {
+  getPrices();
+}, 5000);
