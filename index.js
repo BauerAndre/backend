@@ -76,3 +76,27 @@ app.get("/cryptos/profile/:id", (req, res) => {
       });
     });
 });
+
+app.get("/cryptos/market-data", (req, res) => {
+  res.json({ error: true, message: "Missing Crypto Id in the API URL" });
+});
+
+app.get("/cryptos/market-data/:id", (req, res) => {
+  const cryptoID = req.params.id;
+  axios
+    .get(`${process.env.BASE_URL}/${cryptoID}/metrics/market-data`, {
+      headers: {
+        "x-messari-api-key": process.env.API_KEY,
+      },
+    })
+    .then((responseData) => {
+      res.json(responseData.data.data);
+    })
+    .catch((err) => {
+      res.json({
+        error: true,
+        message: "Error Fetching Prices Data From API",
+        errorDetails: err,
+      });
+    });
+});
