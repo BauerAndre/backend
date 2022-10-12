@@ -26,7 +26,14 @@ socketHandler.on("connection", (socket) => {
 axios
   .get(process.env.LIST_URL)
   .then((response) => {
-    console.log(response);
+    const priceList = response.data.data.map((item) => {
+      return {
+        id: item.id,
+        name: item.symbol,
+        price: item.metrics.market_data.price_usd,
+      };
+    });
+    console.log(priceList);
   })
   .catch((error) => {
     console.log(error);
